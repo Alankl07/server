@@ -18,16 +18,38 @@ export class AgendamentoService {
         return agendamento;
     }
 
-    async updateNoite(id: string){
+    async updateNoite(endPoint: string, id: string){
+        
         const noite = await this.noites.findById(id).exec();
-        const newVagas = noite.vagas - 1;
+        
+        if(endPoint == 'Delete'){
+            var newVagas = noite.vagas + 1;
+        }
+
+        if(endPoint == 'Agendar'){
+            var newVagas = noite.vagas - 1;
+        }
+        
         await this.noites.updateOne({_id: id}, {vagas: newVagas})
+
         return noite;
     }
 
     async create(agendamento: Agendamento){
 
         try{
+            
+            const getUser = await this.agendamentoModel.findOne({ idUser: agendamento.idUser }).exec();
+            const getNoite = await this.noites.findOne({ _id: agendamento.idNoite }).exec();
+            
+            if(getUser){
+                return {message: "No momento você só pode agendar mais de uma noite."};
+            }
+
+            if(getNoite.vagas <= 0){
+                return {message: "Vagas esgotadas para esta noite."};
+            }
+
             const data = new Date();
             if(data.getMonth() + 1 < 10){
                 var mes = '0' + (data.getMonth() + 1)
@@ -35,7 +57,7 @@ export class AgendamentoService {
             agendamento.dataSolicitacao = `${data.getDate()}/${mes}/${data.getFullYear()}`;
             const createAgendamento = new this.agendamentoModel(agendamento);
 
-            this.updateNoite(agendamento.idNoite);
+            this.updateNoite('Agendar', agendamento.idNoite);
 
             return await createAgendamento.save();
         }catch(err){
@@ -53,6 +75,9 @@ export class AgendamentoService {
     }
 
     async delete(id: string){
+        const noite = await this.agendamentoModel.findById(id);
+        this.updateNoite('Delete', noite.idNoite);
+
         return await this.agendamentoModel.deleteOne({ _id: id }).exec();
     }
 }

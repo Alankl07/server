@@ -17,7 +17,7 @@ export class AgendamentosController {
     }
 
     @Post()
-    async create(@Body() body: Agendamento): Promise<Agendamento>{
+    async create(@Body() body: Agendamento): Promise<any>{
         return this.service.create(body);
     }
 
