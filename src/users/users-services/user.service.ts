@@ -13,7 +13,6 @@ export class UserService {
     }
 
     async getOne(Body: User){
-        console.log(Body.userName)
         return await this.userModel.findOne({ userName: Body.userName }).exec();
     }
 
@@ -30,7 +29,6 @@ export class UserService {
 
     async logar(Body: User){
         const user = await this.getOne(Body);
-        console.log(Body);
         try{
             if(user && user.password === Body.password){
                 return user

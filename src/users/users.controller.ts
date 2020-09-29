@@ -14,7 +14,6 @@ export class UsersController {
 
     @Get(':userName')
     async getOne(@Body() Body: User ): Promise<User>{
-        console.log(Body)
         return this.service.getOne(Body);
     }
 
@@ -25,7 +24,6 @@ export class UsersController {
 
     @Post('login')
     async logar(@Body() Body: User): Promise<any>{
-        console.log(Body);
         return this.service.logar(Body);
     }
 
