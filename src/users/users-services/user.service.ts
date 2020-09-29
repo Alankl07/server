@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user';
 import { Model } from 'mongoose';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class UserService {
@@ -19,6 +20,7 @@ export class UserService {
     async create(user: User){
         const use = await this.getOne(user);
         if(use == null){
+            user.password = (randomBytes(2).toString('hex'));
             const createUser = new this.userModel(user);
             return createUser.save()
         }else{
@@ -28,13 +30,21 @@ export class UserService {
 
     async logar(Body: User){
         const user = await this.getOne(Body);
-
+        console.log(Body);
         try{
-            console.log(user)
-            return user
+            if(user && user.password === Body.password){
+                return user
+            }else{
+                return {message: "Usuário não cadastrado", status: 401}
+            }
+            
         }catch(err){
             console.log(err)
             return user;
         }
+    }
+
+    async delete(id: string){
+        return this.userModel.deleteOne({ _id: id}).exec();
     }
 }

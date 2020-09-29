@@ -3,5 +3,6 @@ import * as mongoose from 'mongoose';
 
 export const UsersSchema = new mongoose.Schema({
     nomeCompleto: String,
-    userName: String
+    userName: String,
+    password: String,
 })

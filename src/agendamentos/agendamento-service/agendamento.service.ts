@@ -43,7 +43,7 @@ export class AgendamentoService {
             const getNoite = await this.noites.findOne({ _id: agendamento.idNoite }).exec();
             
             if(getUser){
-                return {message: "No momento você só pode agendar mais de uma noite."};
+                return {message: "No momento você não pode agendar mais de uma noite."};
             }
 
             if(getNoite.vagas <= 0){

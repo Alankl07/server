@@ -2,6 +2,10 @@
 /dist
 /node_modules
 
+/src/serve/*
+
+.env
+
 # Logs
 logs
 *.log

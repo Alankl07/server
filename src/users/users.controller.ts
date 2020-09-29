@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { User } from './users-services/user';
 import { UserService } from './users-services/user.service';
 
@@ -23,9 +23,15 @@ export class UsersController {
         return this.service.create(Body);
     }
 
-    @Post(':login')
-    async logar(@Body() Body: User): Promise<User>{
+    @Post('login')
+    async logar(@Body() Body: User): Promise<any>{
+        console.log(Body);
         return this.service.logar(Body);
+    }
+
+    @Delete(':id')
+    async delete(@Param('id') id: string){
+        return this.service.delete(id);
     }
 
 }
