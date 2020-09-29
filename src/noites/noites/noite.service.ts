@@ -9,7 +9,8 @@ export class NoiteService {
     constructor( @InjectModel('noite') private readonly noiteModel: Model<Noite> ){}
 
     async getAll(){
-      return await this.noiteModel.find().exec();  
+        const noites = await this.noiteModel.find().exec();  
+      return noites
     }
 
     async getOne(id: string){

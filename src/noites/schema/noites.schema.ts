@@ -7,4 +7,6 @@ export const NoiteSchema = new mongoose.Schema({
     tema: String,
     testemunha: String,
     vagas: Number,
+    posicaoAtual: Number,
+    posicaoAnterior: Number,
 })

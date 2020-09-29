@@ -6,4 +6,6 @@ export class Noite extends Document {
     tema: String;
     testemunha: String;
     vagas: number;
+    posicaoAtual: number;
+    posicaoAnterior: number;
 }

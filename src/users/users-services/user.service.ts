@@ -23,7 +23,7 @@ export class UserService {
             const createUser = new this.userModel(user);
             return createUser.save()
         }else{
-            return {message: "Usuario já existe."}
+            return {message: "Usuário já existe."}
         }
     }
 

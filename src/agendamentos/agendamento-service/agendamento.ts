@@ -4,4 +4,5 @@ export class Agendamento extends Document {
     idUser: string;
     idNoite: string;
     dataSolicitacao: string;
+    dataNoite: string;
 }
