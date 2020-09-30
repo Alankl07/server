@@ -5,7 +5,7 @@ export const NoiteSchema = new mongoose.Schema({
     data: String,
     horario: String,
     tema: String,
-    testemunha: String,
+    homenagiados: String,
     vagas: Number,
     posicaoAtual: Number,
     posicaoAnterior: Number,

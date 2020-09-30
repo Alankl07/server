@@ -4,7 +4,7 @@ export class Noite extends Document {
     data: String;
     horario: String;
     tema: String;
-    testemunha: String;
+    homenagiados: String;
     vagas: number;
     posicaoAtual: number;
     posicaoAnterior: number;
