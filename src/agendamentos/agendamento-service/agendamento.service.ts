@@ -72,7 +72,7 @@ export class AgendamentoService {
                 if (getNoiteDisponivel.vagas <= 0) {
                     this.updateNoite('Posicao', getNoiteDisponivel._id, 15);
                 }
-                return { message: `No momento a noite disponivel para agendamento é a ${getNoiteDisponivel.noite} .` };
+                return { message: `No momento a noite disponível para agendamento é a ${getNoiteDisponivel.noite} .` };
             }
 
             if (getNoiteDisponivel.vagas <= 0) {
