@@ -16,6 +16,11 @@ export class UserService {
         return await this.userModel.findOne({ userName: Body.userName }).exec();
     }
 
+    async getOneUser(id: string){
+        console.log(id)
+        return await this.userModel.findOne({ _id: id }).exec();
+    }
+
     async create(user: User){
         const use = await this.getOne(user);
         if(use == null){

@@ -17,6 +17,11 @@ export class UsersController {
         return this.service.getOne(Body);
     }
 
+    @Get('user/:id')
+    async getOneUser(@Param('id') id: string ): Promise<User>{
+        return this.service.getOneUser(id);
+    }
+
     @Post()
     async create(@Body() Body: User){
         return this.service.create(Body);
