@@ -20,19 +20,28 @@ export class AgendamentoService {
     }
 
     async getAgendamentoUser(idUser: string) {
-        const agendamento = await this.agendamentoModel.findOne({ idUser: idUser }).exec();
+        const agendamento = await this.agendamentoModel.find({ idUser: idUser }).exec();
         return agendamento;
     }
 
-    async updateNoite(endPoint: string, id: string, posicao = null) {
+    async updateNoite(endPoint: string, id: any, posicao = null) {
 
         const noite = await this.noites.findById(id).exec();
 
         if (endPoint == 'Delete') {
             if(noite.vagas < 50){
                 var newVagas = noite.vagas + 1;
-                await this.noites.updateOne({ _id: id }, { vagas: newVagas })
+                    await this.noites.updateOne({ _id: id }, { vagas: newVagas })
             }
+        }
+
+        if (endPoint == 'DeleteAgendamento') {
+            if(noite.vagas < 50){
+                var newVagas = noite.vagas + 1;
+            }else{
+                var newVagas = noite.vagas ;
+            }
+            await this.noites.updateOne({ _id: id }, { vagas: newVagas })
         }
 
         if (endPoint == 'Agendar') {
@@ -54,29 +63,34 @@ export class AgendamentoService {
         try {
 
             const getNoites = await this.noites.find().exec();
-            const getUser = await this.agendamentoModel.findOne({ idUser: agendamento.idUser }).exec();
+            const getUser = await this.agendamentoModel.findOne({ idUser: agendamento.idUser, idNoite: agendamento.idNoite }).exec();
             const getNoiteDisponivel = await this.noites.
-                findOne({ posicaoAtual: Math.min.apply(Math, getNoites.map(value => value.posicaoAtual)) }).exec();
+                find({ posicaoAtual: 0}).exec();
+
+                console.log(getUser);
 
 
             if (getUser) {
-                if (getNoiteDisponivel.vagas <= 0) {
-                    this.updateNoite('Posicao', getNoiteDisponivel._id, 15);
+                if (getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(element => element.vagas <= 0)) {
+                    console.log(getNoiteDisponivel.map(value => value._id))
+                    this.updateNoite('Posicao', getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(element => element.vagas <= 0).id, 15);
                 }
                 return { message: "No momento você não pode agendar mais de uma noite." };
             }
 
+            // console.log('::: ',getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(elem => elem.id != agendamento.idNoite) == undefined)
+            // console.log(agendamento.idNoite)
 
-
-            if (agendamento.idNoite != getNoiteDisponivel._id) {
-                if (getNoiteDisponivel.vagas <= 0) {
-                    this.updateNoite('Posicao', getNoiteDisponivel._id, 15);
+            if (getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(element => element.id == agendamento.idNoite) == undefined) {
+                if (getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(element => element.vagas <= 0)) {
+                    console.log(getNoiteDisponivel.map(value => value._id))
+                    this.updateNoite('Posicao', getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(element => element.vagas <= 0).id, 15);
                 }
-                return { message: `No momento a noite disponível para agendamento é a ${getNoiteDisponivel.noite} .` };
+                return { message: `No momento a noite disponível para agendamento é a ${getNoiteDisponivel.map(value => value.noite)}` };
             }
 
-            if (getNoiteDisponivel.vagas <= 0) {
-                this.updateNoite('Posicao', getNoiteDisponivel._id, 15);
+            if (getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(element => element.vagas <= 0 && element.id == agendamento.idNoite)) {
+                this.updateNoite('Posicao', getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(element => element.vagas <= 0).id, 15);
                 return { message: "Vagas esgotadas para esta noite." };
             }
 
@@ -119,10 +133,17 @@ export class AgendamentoService {
         return await this.agendamentoModel.deleteOne({ _id: id }).exec();
     }
 
-    async deleteAgendamento(id: string) {
-        this.atualizaVagas(id);
-        this.updateNoite('Delete', id);
-        return await this.agendamentoModel.deleteOne({ idNoite: id }).exec();
+    async deleteAgendamento(ids: any) {
+        console.log(ids);
+        this.atualizaVagas(ids.idNoite);
+        this.updateNoite('DeleteAgendamento', ids.idNoite);
+        
+        const { deletedCount  } = await this.agendamentoModel.deleteOne({ idUser: ids.idUser, idNoite: ids.idNoite }).exec();
+        if(deletedCount){
+            return {message: true}
+        }else{
+            return {message: false}
+        }
     }
 
     async agendados(idNoite: string) {

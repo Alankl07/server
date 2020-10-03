@@ -18,7 +18,8 @@ export class AgendamentosController {
 
     @Get('/get/:id')
     async getAgendamentoUser(@Param('id') id: string): Promise<any>{
-        return this.service.getAgendamentoUser(id);
+        const agendamento = await this.service.getAgendamentoUser(id);
+         return agendamento
     }
 
     @Get('agendados/:id')
@@ -41,8 +42,8 @@ export class AgendamentosController {
         this.service.delete(id);
     }
 
-    @Delete('delete/:id')
-    async deleteAgendamento(@Param('id') id: string){
-        this.service.deleteAgendamento(id);
+    @Post('cancel') 
+    async deleteAgendamento(@Body() Body: {}){
+        return this.service.deleteAgendamento(Body);
     }
 }
