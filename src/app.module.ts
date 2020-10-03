@@ -8,7 +8,7 @@ import { NoitesModule } from './noites/noites.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [AgendamentosModule, MongooseModule.forRoot('mongodb+srv://db_user:81801809@cluster0.bdywr.gcp.mongodb.net/dbAgendamento?retryWrites=true&w=majority'), NoitesModule, UsersModule],
+  imports: [AgendamentosModule, MongooseModule.forRoot(process.env.MONGO_URL), NoitesModule, UsersModule],
   controllers: [AppController],
   providers: [AppService, ],
 })
