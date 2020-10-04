@@ -86,7 +86,7 @@ export class AgendamentoService {
                     console.log(getNoiteDisponivel.map(value => value._id))
                     this.updateNoite('Posicao', getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(element => element.vagas <= 0).id, 15);
                 }
-                return { message: `No momento a noite disponível para agendamento é a ${getNoiteDisponivel.map(value => value.noite)}` };
+                return { message: `Agendamento disponível somente para a ${getNoiteDisponivel.map(value => value.noite)} todas as outras noites serão por ordem de chegada.` };
             }
 
             if (getNoiteDisponivel.map(value => ({vagas: value.vagas, id: value._id})).find(element => element.vagas <= 0 && element.id == agendamento.idNoite)) {
